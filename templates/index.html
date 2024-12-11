@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED Control</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        button {
+            padding: 20px;
+            font-size: 16px;
+            margin: 20px;
+            cursor: pointer;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>LEDni Boshqarish</h1>
+    <button id="ledOnBtn">LED Yoqish</button>
+    <button id="ledOffBtn">LED O'chirish</button>
+
+    <div id="status">Holat: Noma'lum</div>
+
+    <script>
+        // WebSocket serverga ulanish
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // LEDni yoqish tugmasi
+        document.getElementById('ledOnBtn').onclick = function() {
+            socket.emit('led_on');  // LEDni yoqish so'rovi
+        };
+
+        // LEDni o'chirish tugmasi
+        document.getElementById('ledOffBtn').onclick = function() {
+            socket.emit('led_off');  // LEDni o'chirish so'rovi
+        };
+
+        // Serverdan javobni olish
+        socket.on('status', function(data) {
+            document.getElementById('status').innerText = "Holat: " + data.status;  // Holatni yangilash
+        });
+    </script>
+</body>
+</html>
